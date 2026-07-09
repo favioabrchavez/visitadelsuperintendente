@@ -1,717 +1,311 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cotizador — Puerto Chicama</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nota</title>
 <style>
-  :root {
-    --accent:  #111827;
-    --orange:  #e8572a;
-    --bg:      #f4f2ee;
-    --card:    #ffffff;
-    --text:    #111827;
-    --muted:   #6b7280;
-    --border:  #e5e3de;
-    --green:   #059669;
-    --radius:  12px;
-    --f:       'DM Sans', sans-serif;
-    --mono:    'DM Mono', monospace;
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500&display=swap');
+
+  :root{
+    --bg-1: #0e0f12;
+    --bg-2: #16181d;
+    --card: #ffffff;
+    --ink: #14161a;
+    --ink-soft: #8a8f98;
+    --accent: #5b6cf9;
+    --accent-soft: #eef0ff;
+    --line: #ececf0;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *{ box-sizing: border-box; }
+  html, body{ height: 100%; margin: 0; }
 
-  body {
-    font-family: var(--f);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 28px 16px 72px;
-  }
-
-  /* ── Header ── */
-  header {
-    max-width: 660px;
-    margin: 0 auto 28px;
+  body{
+    font-family: 'Inter', sans-serif;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(91,108,249,0.18), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(91,108,249,0.10), transparent 40%),
+      var(--bg-1);
+    min-height: 100%;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  .stage{
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .eyebrow{
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .card{
+    width: 100%;
+    background: var(--card);
+    border-radius: 24px;
+    box-shadow:
+      0 1px 1px rgba(0,0,0,0.02),
+      0 20px 60px -20px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(255,255,255,0.04);
+    padding: 6px;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card-inner{
+    padding: 32px 32px 22px;
+  }
+
+  .top-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .dot-status{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .dot{
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #d7d9de;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .dot.locked{
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  .size-controls{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #f5f5f7;
+    border-radius: 12px;
+    padding: 4px;
+  }
+
+  .size-btn{
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  .size-btn:hover:not(:disabled){ background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .size-btn:active:not(:disabled){ transform: scale(0.92); }
+  .size-btn:disabled{ opacity: 0.3; cursor: not-allowed; }
+
+  .size-label{
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    width: 26px;
+    text-align: center;
+  }
+
+  textarea{
+    width: 100%;
+    min-height: 300px;
+    resize: vertical;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    padding: 0;
+  }
+
+  textarea::placeholder{ color: #c7c9cf; }
+
+  textarea:disabled{
+    color: var(--ink);
+    opacity: 1;
+    -webkit-text-fill-color: var(--ink);
+    cursor: default;
+  }
+
+  .divider{
+    height: 1px;
+    background: var(--line);
+    margin: 4px 0 18px;
+  }
+
+  .bottom-row{
+    display: flex;
+    align-items: center;
     justify-content: space-between;
   }
-  header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
-  header p  { font-size: 12px; color: var(--muted); font-family: var(--mono); }
 
-  /* ── Layout ── */
-  .wrap { max-width: 660px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
-
-  /* ── Card ── */
-  .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-
-  .card-head {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .card-head .ico {
-    width: 26px; height: 26px; border-radius: 6px;
-    background: var(--accent); color: #fff;
-    display: flex; align-items: center; justify-content: center; font-size: 12px;
-  }
-  .card-head h2 { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
-
-  .card-body { padding: 18px; }
-
-  /* ── Form ── */
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-
-  .field { display: flex; flex-direction: column; gap: 5px; }
-  label {
-    font-size: 10px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted);
-  }
-  input[type="text"], input[type="date"], select {
-    font-family: var(--f); font-size: 14px;
-    padding: 9px 12px; border: 1px solid var(--border);
-    border-radius: 8px; background: var(--bg); color: var(--text);
-    width: 100%; outline: none; transition: border-color 0.15s;
-    -webkit-appearance: none; appearance: none;
-  }
-  input:focus, select:focus { border-color: var(--orange); }
-
-  /* ── Toggle tercera persona ── */
-  .toggle-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 14px; background: var(--bg); border-radius: 8px;
-    margin-bottom: 12px; cursor: pointer; user-select: none;
-  }
-  .toggle-row span { font-size: 13px; font-weight: 500; }
-  .toggle-row small { font-size: 12px; color: var(--muted); }
-
-  .toggle {
-    width: 40px; height: 22px; border-radius: 11px;
-    background: var(--border); position: relative;
-    transition: background 0.2s; flex-shrink: 0;
-  }
-  .toggle.on { background: var(--orange); }
-  .toggle::after {
-    content: ''; position: absolute;
-    width: 16px; height: 16px; border-radius: 50%;
-    background: #fff; top: 3px; left: 3px;
-    transition: left 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,.2);
-  }
-  .toggle.on::after { left: 21px; }
-
-  /* ── Result grid ── */
-  .res-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1px; background: var(--border);
-    border-radius: 10px; overflow: hidden; margin-top: 16px;
-  }
-  .res-cell {
-    background: var(--card); padding: 14px 16px;
-    display: flex; flex-direction: column; gap: 3px;
-  }
-  .res-cell.dark  { background: var(--accent); }
-  .res-cell.dark .rl, .res-cell.dark .rv { color: #fff; }
-  .res-cell.warm  { background: #fff5f1; }
-  .res-cell.warm .rv { color: var(--orange); }
-
-  .rl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
-  .rv { font-family: var(--mono); font-size: 20px; font-weight: 500; }
-  .rs { font-size: 11px; color: var(--muted); margin-top: 1px; }
-
-  /* ── Breakdown ── */
-  .breakdown {
-    margin-top: 14px; background: var(--bg); border-radius: 8px;
-    padding: 12px 14px; font-family: var(--mono); font-size: 12px;
-    color: var(--muted); line-height: 1.9; max-height: 160px; overflow-y: auto;
-  }
-  .brow { display: flex; justify-content: space-between; }
-  .brow .tag {
-    font-size: 9px; padding: 1px 5px; border-radius: 4px;
-    background: var(--border); color: var(--muted);
-    margin-left: 6px; vertical-align: middle;
-    font-family: var(--f); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .brow b { color: var(--text); font-weight: 500; }
-  .brow.total { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 6px; color: var(--text); }
-
-  .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 18px 0; }
-
-  /* ── Servicios ── */
-  .svc-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 11px 0; border-bottom: 1px solid var(--border);
-  }
-  .svc-row:last-of-type { border-bottom: none; }
-  .svc-info { display: flex; flex-direction: column; gap: 2px; }
-  .svc-name { font-size: 14px; font-weight: 500; }
-  .svc-price { font-family: var(--mono); font-size: 12px; color: var(--muted); }
-
-  .qty { display: flex; align-items: center; gap: 10px; }
-  .qbtn {
-    width: 28px; height: 28px; border-radius: 50%;
-    border: 1px solid var(--border); background: var(--bg);
-    font-size: 16px; cursor: pointer; display: flex;
-    align-items: center; justify-content: center; color: var(--text);
-    transition: all 0.12s; line-height: 1;
-  }
-  .qbtn:hover { border-color: var(--orange); color: var(--orange); }
-  .qnum { font-family: var(--mono); font-size: 14px; width: 18px; text-align: center; }
-
-  .svc-footer {
-    display: flex; justify-content: space-between; align-items: center;
-    padding-top: 14px; margin-top: 2px;
-    border-top: 1px solid var(--border);
-  }
-  .svc-footer-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-  .svc-footer-val   { font-family: var(--mono); font-size: 18px; font-weight: 500; }
-
-  /* ── Mensajes ── */
-  .msg-block { padding: 14px 0; border-bottom: 1px solid var(--border); }
-  .msg-block:last-child { border-bottom: none; }
-  .msg-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .msg-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-
-  .copy-btn {
-    font-family: var(--f); font-size: 11px; font-weight: 500;
-    padding: 4px 10px; border-radius: 6px;
-    border: 1px solid var(--border); background: var(--bg);
-    cursor: pointer; color: var(--text); transition: all 0.12s;
-  }
-  .copy-btn:hover { border-color: var(--orange); color: var(--orange); }
-  .copy-btn.ok { background: #ecfdf5; border-color: var(--green); color: var(--green); }
-
-  .msg-text {
-    font-size: 13px; line-height: 1.75; color: var(--text);
-    white-space: pre-wrap; background: var(--bg);
-    border-radius: 8px; padding: 12px 14px;
+  .hint{
+    font-size: 13px;
+    color: var(--ink-soft);
   }
 
-  /* ── Guest name inline ── */
-  .name-row { display: flex; gap: 10px; margin-bottom: 14px; }
-  .name-row input { flex: 1; }
+  .lock-btn{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--ink);
+    color: #fff;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 20px -8px rgba(20,22,26,0.5);
+  }
 
-  @media (max-width: 420px) {
-    .row2, .row3 { grid-template-columns: 1fr; }
-    .res-grid { grid-template-columns: 1fr; }
+  .lock-btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(20,22,26,0.55); }
+  .lock-btn:active{ transform: translateY(0); }
+
+  .lock-btn.locked{
+    background: var(--accent);
+    box-shadow: 0 8px 20px -8px rgba(91,108,249,0.55);
+  }
+
+  .lock-btn svg{
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  .shackle{
+    transform-origin: 50% 70%;
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .lock-btn.locked .shackle{
+    transform: none;
+  }
+  .lock-btn:not(.locked) .shackle{
+    transform: rotate(-18deg) translateX(-1.5px) translateY(-1px);
+  }
+
+  @media (max-width: 480px){
+    .card-inner{ padding: 24px 20px 18px; }
+    textarea{ font-size: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
   }
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>Cotizador</h1>
-    <p id="hdr-date"></p>
-  </div>
-</header>
+  <div class="stage">
+    <span class="eyebrow">Nota rápida</span>
 
-<div class="wrap">
-
-  <!-- ══════════════════════════════
-       SECCIÓN 1 · ESTADÍA
-       ══════════════════════════════ -->
-  <div class="card">
-    <div class="card-head"><div class="ico">🌙</div><h2>Estadía</h2></div>
-    <div class="card-body">
-
-      <div class="name-row">
-        <input type="text" id="guest-name" placeholder="Nombre del huésped" />
-      </div>
-
-      <div class="row2">
-        <div class="field"><label>Check-in</label><input type="date" id="checkin" /></div>
-        <div class="field"><label>Check-out</label><input type="date" id="checkout" /></div>
-      </div>
-
-      <div class="row2">
-        <div class="field">
-          <label>Habitación</label>
-          <select id="room">
-            <option value="">— Seleccionar —</option>
-            <option value="d1">Doble 1er piso</option>
-            <option value="m1">Matrimonial 1er piso</option>
-            <option value="t1">Triple 1er piso</option>
-            <option value="d2">Doble 2do piso</option>
-            <option value="m2">Matrimonial 2do piso</option>
-            <option value="mc2">Matrimonial + cama 2do piso</option>
-            <option value="suite">Suite</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Huéspedes</label>
-          <select id="guests">
-            <option value="1">1 huésped</option>
-            <option value="2" selected>2 huéspedes</option>
-            <option value="3" id="opt-3" disabled>3 huéspedes</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Toggle tercero (solo visible en hab. de 2 personas) -->
-      <div class="toggle-row" id="extra-toggle-row" style="display:none" onclick="toggleExtra()">
-        <div>
-          <span>Tercera persona</span><br>
-          <small id="extra-label">+ S/. — por noche</small>
-        </div>
-        <div class="toggle" id="extra-toggle"></div>
-      </div>
-
-      <!-- Resultado -->
-      <div id="res-wrap" style="display:none">
-        <div class="res-grid">
-          <div class="res-cell dark">
-            <span class="rl">Precio x noche</span>
-            <span class="rv" id="r-pxn">—</span>
-            <span class="rs" id="r-nn"></span>
+    <div class="card">
+      <div class="card-inner">
+        <div class="top-row">
+          <div class="dot-status">
+            <span class="dot" id="dot"></span>
+            <span id="statusText">Editable</span>
           </div>
-          <div class="res-cell">
-            <span class="rl">Total noches</span>
-            <span class="rv" id="r-total">—</span>
-          </div>
-          <div class="res-cell warm">
-            <span class="rl">Descuento 1</span>
-            <span class="rv" id="r-d1">—</span>
-            <span class="rs" id="r-d1-pxn"></span>
-          </div>
-          <div class="res-cell warm">
-            <span class="rl">Descuento 2</span>
-            <span class="rv" id="r-d2">—</span>
-            <span class="rs" id="r-d2-pxn"></span>
+          <div class="size-controls">
+            <button class="size-btn" id="dec" aria-label="Reducir tamaño de letra">–</button>
+            <span class="size-label" id="sizeLabel">17</span>
+            <button class="size-btn" id="inc" aria-label="Aumentar tamaño de letra">+</button>
           </div>
         </div>
-        <div class="breakdown" id="breakdown"></div>
-      </div>
-      <div class="empty-state" id="res-empty">Selecciona habitación y fechas para calcular</div>
 
+        <textarea id="note" placeholder="Escribe algo…" spellcheck="false"></textarea>
+
+        <div class="divider"></div>
+
+        <div class="bottom-row">
+          <span class="hint" id="hint">Puedes editar libremente</span>
+          <button class="lock-btn" id="lockBtn">
+            <svg viewBox="0 0 24 24">
+              <rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/>
+              <path class="shackle" d="M7.5 10.5V7.2a4.5 4.5 0 0 1 9 0v3.3"/>
+            </svg>
+            <span id="lockLabel">Bloquear</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ══════════════════════════════
-       SECCIÓN 2 · SERVICIOS
-       ══════════════════════════════ -->
-  <div class="card">
-    <div class="card-head"><div class="ico">✦</div><h2>Servicios</h2></div>
-    <div class="card-body" id="svc-body"></div>
-  </div>
-
-  <!-- ══════════════════════════════
-       SECCIÓN 3 · MENSAJES
-       ══════════════════════════════ -->
-  <div class="card">
-    <div class="card-head"><div class="ico">💬</div><h2>Mensajes</h2></div>
-    <div class="card-body" id="msg-body"></div>
-  </div>
-
-</div>
-
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗
-   ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝
-   ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
-   ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
-   ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
-    ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
+  const note = document.getElementById('note');
+  const inc = document.getElementById('inc');
+  const dec = document.getElementById('dec');
+  const sizeLabel = document.getElementById('sizeLabel');
+  const lockBtn = document.getElementById('lockBtn');
+  const lockLabel = document.getElementById('lockLabel');
+  const dot = document.getElementById('dot');
+  const statusText = document.getElementById('statusText');
+  const hint = document.getElementById('hint');
 
-   ZONA DE CONFIGURACIÓN
-   ═══════════════════════════════════════════════════════════════ */
+  let fontSize = 17;
+  let locked = false;
 
-// ── HABITACIONES ──────────────────────────────────────────────
-// capacidad: 2 = doble/matrimonial/suite | 3 = triple/matri+cama
-// tarifas: [mantenimiento (mar), entreSemana (lun/mié/jue/vie), finDeSemana (sáb/dom)]
-// (los días que aplica cada tarifa se controlan en DIAS_TARIFA más abajo)
+  function applySize(){
+    note.style.fontSize = fontSize + 'px';
+    sizeLabel.textContent = fontSize;
+    dec.disabled = fontSize <= 12;
+    inc.disabled = fontSize >= 36;
+  }
+  applySize();
 
-const HABITACIONES = {
-  d1:   { nombre: "Doble 1er piso",               capacidad: 2, tarifas: [180, 220, 280] },
-  m1:   { nombre: "Matrimonial 1er piso",          capacidad: 2, tarifas: [200, 240, 300] },
-  t1:   { nombre: "Triple 1er piso",               capacidad: 3, tarifas: [240, 290, 360] },
-  d2:   { nombre: "Doble 2do piso",                capacidad: 2, tarifas: [190, 230, 290] },
-  m2:   { nombre: "Matrimonial 2do piso",          capacidad: 2, tarifas: [210, 250, 320] },
-  mc2:  { nombre: "Matrimonial + cama 2do piso",   capacidad: 3, tarifas: [250, 300, 380] },
-  suite:{ nombre: "Suite",                         capacidad: 2, tarifas: [350, 420, 520] },
-};
+  inc.addEventListener('click', () => { fontSize = Math.min(36, fontSize + 2); applySize(); });
+  dec.addEventListener('click', () => { fontSize = Math.max(12, fontSize - 2); applySize(); });
 
-// ── DÍAS POR TIPO DE TARIFA ────────────────────────────────────
-// 0=Dom 1=Lun 2=Mar 3=Mié 4=Jue 5=Vie 6=Sáb
-const DIAS_TARIFA = {
-  mantenimiento: [2],           // Martes
-  entreSemana:   [1, 3, 4, 5], // Lun, Mié, Jue, Vie
-  finDeSemana:   [0, 6],        // Dom, Sáb
-};
-
-// ── EXTRA POR TERCERA PERSONA (soles por noche) ────────────────
-const EXTRA_TERCERO = 70;
-
-// ── DESCUENTOS (montos fijos en soles sobre el total de noches) ─
-const DESCUENTOS = {
-  d1: 150,   // Descuento 1 — techo que el equipo puede ofrecer
-  d2: 300,   // Descuento 2 — piso absoluto
-};
-
-// ── SERVICIOS ADICIONALES ──────────────────────────────────────
-const SERVICIOS = [
-  { id: "transfer", nombre: "Transfer",  precio: 80,  unidad: "por persona / traslado" },
-  { id: "masaje",   nombre: "Masaje",    precio: 120, unidad: "por sesión" },
-  { id: "zodiac",   nombre: "Zodiac",    precio: 150, unidad: "por bote" },
-];
-
-// ── MENSAJES PARA EL CLIENTE ───────────────────────────────────
-// Variables disponibles:
-// {nombre} {checkin} {checkout} {noches} {huespedes} {hab}
-// {pxn}   → precio x noche (original)
-// {total} → total noches (original)
-// {d1}    → total con descuento 1   | {d1_pxn} → precio x noche con desc 1
-// {d2}    → total con descuento 2   | {d2_pxn} → precio x noche con desc 2
-// {svcBloque}     → lista de servicios seleccionados
-// {totalGeneral}  → noches + servicios (precio original)
-// {totalD1}       → noches desc1 + servicios
-// {totalD2}       → noches desc2 + servicios
-
-const MENSAJES = [
-  {
-    titulo: "Cotización inicial",
-    texto:
-`Hola {nombre} 👋 Te comparto la cotización para tu estadía:
-
-📅 Check-in: {checkin}
-📅 Check-out: {checkout}
-🌙 {noches} noches · {huespedes}
-🛏 {hab}
-
-💰 Precio por noche: S/. {pxn}
-💳 Total estadía: S/. {total}{svcBloque}
-✅ Total: S/. {totalGeneral}
-
-¡Estamos a tu disposición para cualquier consulta!`
-  },
-  {
-    titulo: "Con descuento 1",
-    texto:
-`Hola {nombre}, revisando disponibilidad podemos ofrecerte una tarifa especial:
-
-🌙 {noches} noches · {huespedes}
-🛏 {hab}
-
-💰 Precio x noche: S/. {d1_pxn}  ~~S/. {pxn}~~
-💳 Total estadía: S/. {d1}{svcBloque}
-✅ Total: S/. {totalD1}
-
-Esta tarifa tiene disponibilidad limitada. ¿La reservamos?`
-  },
-  {
-    titulo: "Con descuento 2",
-    texto:
-`{nombre}, para cerrar hoy podemos darte nuestra mejor tarifa:
-
-🌙 {noches} noches · {huespedes}
-🛏 {hab}
-
-💰 Precio x noche: S/. {d2_pxn}
-💳 Total estadía: S/. {d2}{svcBloque}
-✅ Total: S/. {totalD2}
-
-Esta es la tarifa más baja que podemos manejar. ¿Confirmamos?`
-  },
-];
-
-/* ═══════════════════════════════════════════════════════════════
-   FIN DE CONFIGURACIÓN — no edites más abajo
-   ═══════════════════════════════════════════════════════════════ */
-
-const MESES   = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-const DIAS_ES = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
-const TAGS    = { mantenimiento: "Mant.", entreSemana: "Semana", finDeSemana: "Finde" };
-
-// Header fecha
-const hoy = new Date();
-document.getElementById("hdr-date").textContent =
-  `${hoy.getDate()} de ${MESES[hoy.getMonth()]} ${hoy.getFullYear()}`;
-
-// Estado
-const S = {
-  checkin: null, checkout: null,
-  room: "", guests: 2,
-  extraTercero: false,
-  guestName: "",
-  nd: null,           // nightsData
-  svc: {},            // { id: count }
-};
-SERVICIOS.forEach(s => S.svc[s.id] = 0);
-
-// ── Helpers ──────────────────────────────────────────────────
-function roundTo9(n) {
-  if (n <= 0) return 9;
-  const dec = Math.floor(n / 10) * 10;
-  return (n % 10) <= 9 ? dec + 9 : dec + 19;
-}
-
-function getTipoTarifa(dia) {
-  if (DIAS_TARIFA.mantenimiento.includes(dia)) return "mantenimiento";
-  if (DIAS_TARIFA.finDeSemana.includes(dia))  return "finDeSemana";
-  return "entreSemana";
-}
-
-function tarifaIdx(tipo) {
-  return { mantenimiento: 0, entreSemana: 1, finDeSemana: 2 }[tipo];
-}
-
-function fmtDate(str) {
-  const [y, m, d] = str.split("-").map(Number);
-  return `${d} de ${MESES[m - 1]}`;
-}
-
-function calcSvc() {
-  return SERVICIOS.reduce((a, s) => a + s.precio * S.svc[s.id], 0);
-}
-
-function svcBloque() {
-  const act = SERVICIOS.filter(s => S.svc[s.id] > 0);
-  if (!act.length) return "";
-  const lineas = act.map(s => `  · ${s.nombre} ×${S.svc[s.id]}: S/. ${s.precio * S.svc[s.id]}`).join("\n");
-  return `\n\n🛎 Servicios:\n${lineas}`;
-}
-
-// ── Cálculo de noches ─────────────────────────────────────────
-function calcNights() {
-  if (!S.checkin || !S.checkout || !S.room) return null;
-
-  const hab   = HABITACIONES[S.room];
-  const start = new Date(S.checkin  + "T12:00:00");
-  const end   = new Date(S.checkout + "T12:00:00");
-  if (end <= start) return null;
-
-  const filas = [];
-  let suma = 0;
-  let cur  = new Date(start);
-
-  while (cur < end) {
-    const dia   = cur.getDay();
-    const tipo  = getTipoTarifa(dia);
-    let precio  = hab.tarifas[tarifaIdx(tipo)];
-    if (S.extraTercero && S.guests === 3 && hab.capacidad === 2) precio += EXTRA_TERCERO;
-    filas.push({ fecha: new Date(cur), dia, tipo, precio });
-    suma += precio;
-    cur.setDate(cur.getDate() + 1);
+  function setLocked(state){
+    locked = state;
+    note.disabled = locked;
+    lockBtn.classList.toggle('locked', locked);
+    dot.classList.toggle('locked', locked);
+    lockLabel.textContent = locked ? 'Desbloquear' : 'Bloquear';
+    statusText.textContent = locked ? 'Bloqueada' : 'Editable';
+    hint.textContent = locked ? 'El texto está protegido' : 'Puedes editar libremente';
   }
 
-  const n   = filas.length;
-  const pxn = roundTo9(Math.ceil(suma / n));
-  const tot = pxn * n;
-  const d1  = tot - DESCUENTOS.d1;
-  const d2  = tot - DESCUENTOS.d2;
-
-  return {
-    n, filas, suma, pxn, tot,
-    d1, d2,
-    d1pxn: roundTo9(Math.ceil(d1 / n)),
-    d2pxn: roundTo9(Math.ceil(d2 / n)),
-  };
-}
-
-// ── Render noches ─────────────────────────────────────────────
-function renderNights() {
-  const nd = calcNights();
-  S.nd = nd;
-
-  const resWrap = document.getElementById("res-wrap");
-  const resEmpty = document.getElementById("res-empty");
-
-  if (!nd) {
-    resWrap.style.display  = "none";
-    resEmpty.style.display = "block";
-    renderMessages();
-    return;
-  }
-
-  resWrap.style.display  = "block";
-  resEmpty.style.display = "none";
-
-  document.getElementById("r-pxn").textContent   = `S/. ${nd.pxn}`;
-  document.getElementById("r-nn").textContent     = `${nd.n} ${nd.n === 1 ? "noche" : "noches"}`;
-  document.getElementById("r-total").textContent  = `S/. ${nd.tot}`;
-  document.getElementById("r-d1").textContent     = `S/. ${nd.d1}`;
-  document.getElementById("r-d1-pxn").textContent = `S/. ${nd.d1pxn} × noche`;
-  document.getElementById("r-d2").textContent     = `S/. ${nd.d2}`;
-  document.getElementById("r-d2-pxn").textContent = `S/. ${nd.d2pxn} × noche`;
-
-  // Breakdown
-  const rows = nd.filas.map(f => {
-    const d   = f.fecha;
-    const lbl = `${DIAS_ES[f.dia]} ${d.getDate()} ${MESES[d.getMonth()]}`;
-    return `<div class="brow"><span>${lbl}<span class="tag">${TAGS[f.tipo]}</span></span><b>S/. ${f.precio}</b></div>`;
-  }).join("");
-
-  document.getElementById("breakdown").innerHTML = rows +
-    `<div class="brow total"><span>Suma total</span><b>S/. ${nd.suma}</b></div>` +
-    `<div class="brow"><span>Promedio → precio ×noche</span><b>S/. ${nd.pxn}</b></div>`;
-
-  renderMessages();
-}
-
-// ── Render habitación / toggle tercero ───────────────────────
-function onRoomChange() {
-  const key = document.getElementById("room").value;
-  S.room = key;
-  S.extraTercero = false;
-
-  const toggleRow = document.getElementById("extra-toggle-row");
-  const opt3      = document.getElementById("opt-3");
-  const guestSel  = document.getElementById("guests");
-
-  if (!key) { toggleRow.style.display = "none"; renderNights(); return; }
-
-  const hab = HABITACIONES[key];
-
-  if (hab.capacidad === 3) {
-    // Habitaciones que admiten 3 naturalmente
-    toggleRow.style.display = "none";
-    opt3.disabled = false;
-  } else {
-    // Habitaciones de 2: el tercero es extra
-    opt3.disabled = true;
-    if (parseInt(guestSel.value) === 3) guestSel.value = "2";
-    document.getElementById("extra-toggle").classList.remove("on");
-    document.getElementById("extra-label").textContent = `+ S/. ${EXTRA_TERCERO} por noche`;
-    toggleRow.style.display = "flex";
-  }
-
-  S.guests = parseInt(guestSel.value);
-  renderNights();
-}
-
-function toggleExtra() {
-  S.extraTercero = !S.extraTercero;
-  const tog = document.getElementById("extra-toggle");
-  tog.classList.toggle("on", S.extraTercero);
-  renderNights();
-}
-
-// ── Render servicios ──────────────────────────────────────────
-function renderServices() {
-  const body = document.getElementById("svc-body");
-  let html = "";
-
-  SERVICIOS.forEach(s => {
-    html += `
-    <div class="svc-row">
-      <div class="svc-info">
-        <span class="svc-name">${s.nombre}</span>
-        <span class="svc-price">S/. ${s.precio} · ${s.unidad}</span>
-      </div>
-      <div class="qty">
-        <button class="qbtn" onclick="chgSvc('${s.id}',-1)">−</button>
-        <span class="qnum" id="qn-${s.id}">0</span>
-        <button class="qbtn" onclick="chgSvc('${s.id}',+1)">+</button>
-      </div>
-    </div>`;
-  });
-
-  html += `
-  <div class="svc-footer">
-    <span class="svc-footer-label">Total servicios</span>
-    <span class="svc-footer-val" id="svc-total">S/. 0</span>
-  </div>`;
-
-  body.innerHTML = html;
-}
-
-function chgSvc(id, delta) {
-  S.svc[id] = Math.max(0, S.svc[id] + delta);
-  document.getElementById(`qn-${id}`).textContent = S.svc[id];
-  document.getElementById("svc-total").textContent = `S/. ${calcSvc()}`;
-  renderMessages();
-}
-
-// ── Render mensajes ───────────────────────────────────────────
-function renderMessages() {
-  const nd   = S.nd;
-  const svc  = calcSvc();
-  const hab  = S.room ? HABITACIONES[S.room].nombre : "—";
-  const hues = S.guests === 1 ? "1 huésped" : `${S.guests} huéspedes`;
-
-  const vars = {
-    nombre:       S.guestName || "Cliente",
-    checkin:      S.checkin  ? fmtDate(S.checkin)  : "—",
-    checkout:     S.checkout ? fmtDate(S.checkout) : "—",
-    noches:       nd ? nd.n   : "—",
-    huespedes:    hues,
-    hab,
-    pxn:          nd ? nd.pxn : "—",
-    total:        nd ? nd.tot : "—",
-    d1:           nd ? nd.d1  : "—",
-    d1_pxn:       nd ? nd.d1pxn : "—",
-    d2:           nd ? nd.d2  : "—",
-    d2_pxn:       nd ? nd.d2pxn : "—",
-    svcBloque:    svcBloque(),
-    totalGeneral: nd ? nd.tot + svc : "—",
-    totalD1:      nd ? nd.d1  + svc : "—",
-    totalD2:      nd ? nd.d2  + svc : "—",
-  };
-
-  function fill(tmpl) {
-    return tmpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] !== undefined ? vars[k] : `{${k}}`);
-  }
-
-  const body = document.getElementById("msg-body");
-  body.innerHTML = MENSAJES.map((m, i) => {
-    const txt = fill(m.texto);
-    return `
-    <div class="msg-block">
-      <div class="msg-head">
-        <span class="msg-title">${m.titulo}</span>
-        <button class="copy-btn" id="cbtn-${i}" onclick="copyMsg(${i}, ${JSON.stringify(txt)})">Copiar</button>
-      </div>
-      <div class="msg-text">${txt}</div>
-    </div>`;
-  }).join("");
-}
-
-function copyMsg(i, text) {
-  navigator.clipboard.writeText(text).then(() => {
-    const b = document.getElementById(`cbtn-${i}`);
-    b.textContent = "¡Copiado!";
-    b.classList.add("ok");
-    setTimeout(() => { b.textContent = "Copiar"; b.classList.remove("ok"); }, 2000);
-  });
-}
-
-// ── Event listeners ───────────────────────────────────────────
-document.getElementById("checkin").addEventListener("change", e => {
-  S.checkin = e.target.value;
-  // Auto-set checkout al día siguiente si está vacío o es menor
-  if (!S.checkout || S.checkout <= S.checkin) {
-    const d = new Date(S.checkin + "T12:00:00");
-    d.setDate(d.getDate() + 1);
-    S.checkout = d.toISOString().slice(0, 10);
-    document.getElementById("checkout").value = S.checkout;
-  }
-  renderNights();
-});
-
-document.getElementById("checkout").addEventListener("change", e => {
-  S.checkout = e.target.value;
-  renderNights();
-});
-
-document.getElementById("room").addEventListener("change", onRoomChange);
-
-document.getElementById("guests").addEventListener("change", e => {
-  S.guests = parseInt(e.target.value);
-  renderNights();
-});
-
-document.getElementById("guest-name").addEventListener("input", e => {
-  S.guestName = e.target.value;
-  renderMessages();
-});
-
-// Init
-renderServices();
-renderMessages();
+  lockBtn.addEventListener('click', () => setLocked(!locked));
 </script>
+
 </body>
 </html>
